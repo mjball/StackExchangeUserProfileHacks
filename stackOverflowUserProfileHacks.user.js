@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name			Stack Overflow rep per Q&A
 // @namespace		http://mjball.github.com
-// @description		Too lazy to bust out a calculator (forget about mental math)
-// @include			http://stackoverflow.com/users/*
-// @include			http://meta.stackoverflow.com/users/*
-// @include			http://*.stackexchange.com/users/*
-// @include			http://superuser.com/users/*
+// @description		Shows a SE user's reputation, divided by the number of their questions and answers.
+// @include		http://stackoverflow.com/users/*
+// @include		http://meta.stackoverflow.com/users/*
+// @include		http://*.stackexchange.com/users/*
+// @include		http://superuser.com/users/*
 // ==/UserScript==
 
 (function ()
