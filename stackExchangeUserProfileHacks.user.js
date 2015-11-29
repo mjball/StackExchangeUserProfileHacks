@@ -16,7 +16,11 @@
             }
 
             function parseIntLenient(input) {
-                return parseInt(input.replace(/\D+/g, ''), 10)
+                if (input) {
+                    return parseInt(input.replace(/\D+/g, ''), 10)
+                }
+                
+                return NaN;
             }
 
             function ownText($j) {
