@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        Stack Exchange rep per Q&A
+// @name        Stack Exchange user profile hacks
 // @namespace       http://mjball.github.com
 // @description     Shows a SE user's reputation, divided by the number of their questions and answers.
 // @include     http://stackoverflow.com/users/*
@@ -8,27 +8,48 @@
 // @include     http://superuser.com/users/*
 // ==/UserScript==
 
-(function ()
-{
-    function calc()
-    {
-        $(function ()
-        {
-            function p($j) { return parseInt($j.text().replace(/\D+/, ''), 10); }
-        
-            var $rep = $('#large-user-info div.reputation'),
-                userrep = p($rep.find('span > a')),
-                questioncount = p($('#user-panel-questions > div.subheader span.count')),
-                answercount = p($('#user-panel-answers > div.subheader span.count')),
-                rawaverage =  userrep/(questioncount+answercount),
-                averagerep = Math.round(rawaverage);
-                
-            if (isNaN(averagerep)) return;
+(function () {
+    function calc() {
+        $(function () {
+            function parseText($j) {
+                return parseIntLenient($j.text());
+            }
 
-            $('<div/>', {title: rawaverage, text: averagerep + ' rep/q&a', 'class': 'reputation'}).insertAfter($rep);
+            function parseIntLenient(input) {
+                return parseInt(input.replace(/\D+/g, ''), 10)
+            }
+
+            function ownText($j) {
+                var textNodes = $j.contents().filter(function() {
+                    return this.nodeType == 3; 
+                });
+
+                if (textNodes.length) {
+                    return textNodes[0].nodeValue;
+                }
+
+            }
+
+            var $rep = $('#avatar-card .reputation');
+            var userrep = parseIntLenient(ownText($rep));
+            var questioncount = parseText($('.user-stats .stat.questions span.number'));
+            var answercount = parseText($('.user-stats .stat.answers span.number'));
+            var rawaverage = userrep/(questioncount+answercount);
+            var averagerep = Math.round(rawaverage);
+
+            if (isNaN(averagerep)) {
+                return;
+            }
+
+            $('<div/>', {
+                title: rawaverage,
+                text: averagerep + ' rep/post',
+                'class': 'reputation-per-post',
+                style: 'position: relative; top: -0.5em'
+            }).insertAfter($rep);
         });
     }
-    
+
     var script = document.createElement("script");
     script.textContent = "(" + calc.toString() + ")();";
     document.body.appendChild(script);
